@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleExecutable</key>
+    <string>drite</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.drite.editor</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>Drite</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.1.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>13.0</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2025 Drite. All rights reserved.</string>
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+                <string>txt</string>
+                <string>md</string>
+                <string>cpp</string>
+                <string>h</string>
+                <string>hpp</string>
+                <string>c</string>
+                <string>cc</string>
+                <string>mm</string>
+                <string>m</string>
+                <string>swift</string>
+                <string>rs</string>
+                <string>py</string>
+                <string>js</string>
+                <string>ts</string>
+                <string>jsx</string>
+                <string>tsx</string>
+                <string>json</string>
+                <string>xml</string>
+                <string>html</string>
+                <string>css</string>
+                <string>scss</string>
+            </array>
+            <key>CFBundleTypeName</key>
+            <string>Text Document</string>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>LSHandlerRank</key>
+            <string>Alternate</string>
+        </dict>
+    </array>
+</dict>
+</plist>
