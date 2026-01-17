@@ -357,5 +357,5 @@ See [LICENSE](LICENSE) for details.
 ---
 
 <div align="center">
-  <sub>Built with ❤️ using C++23, Metal, Vulkan, and DirectX</sub>
+  <sub>Built with ❤️ by Drew Worden</sub>
 </div>
