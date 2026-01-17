@@ -280,4 +280,6 @@ To add Windows or Linux support:
 
 ## License
 
-MIT License 
+MIT License - Copyright (c) 2026 Drew Worden
+
+See [LICENSE](LICENSE) for details. 
