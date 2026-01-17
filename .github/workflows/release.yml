@@ -43,6 +43,11 @@ jobs:
     - name: Create DMG
       run: make dmg
 
+    - name: Remove quarantine attributes (for unsigned apps)
+      run: |
+        xattr -cr build/${{ env.APP_NAME }}.app
+        echo "Removed quarantine attributes from app bundle"
+
     - name: Rename artifacts
       run: |
         mv build/${{ env.APP_NAME }}.dmg build/${{ env.APP_NAME }}-${{ steps.version.outputs.version }}-macOS.dmg
