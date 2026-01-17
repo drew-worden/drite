@@ -121,8 +121,11 @@ $(APP_BUNDLE): $(BUILD_DIRECTORY)/$(TARGET)
 	@echo "Creating macOS app bundle..."
 	@mkdir -p $(APP_BUNDLE)/Contents/MacOS
 	@mkdir -p $(APP_BUNDLE)/Contents/Resources
+	@mkdir -p $(APP_BUNDLE)/Contents/Resources/bin
 	@cp $(BUILD_DIRECTORY)/$(TARGET) $(APP_BUNDLE)/Contents/MacOS/$(TARGET)
 	@cp $(RESOURCES_DIR)/macos/Info.plist $(APP_BUNDLE)/Contents/Info.plist
+	@cp $(RESOURCES_DIR)/macos/drite-cli $(APP_BUNDLE)/Contents/Resources/bin/drite
+	@chmod +x $(APP_BUNDLE)/Contents/Resources/bin/drite
 	@if [ -f "$(RESOURCES_DIR)/macos/AppIcon.icns" ]; then \
 		cp "$(RESOURCES_DIR)/macos/AppIcon.icns" $(APP_BUNDLE)/Contents/Resources/AppIcon.icns; \
 		echo "Icon copied to app bundle"; \
@@ -147,28 +150,42 @@ dmg: app
 	@echo "Creating DMG..."
 	@mkdir -p $(BUILD_DIRECTORY)/dmg
 	@cp -r $(APP_BUNDLE) $(BUILD_DIRECTORY)/dmg/
+	@cp "$(RESOURCES_DIR)/macos/Install CLI Tool.command" $(BUILD_DIRECTORY)/dmg/
+	@ln -sf /Applications $(BUILD_DIRECTORY)/dmg/Applications
 	@hdiutil create -volname "$(APP_NAME)" -srcfolder $(BUILD_DIRECTORY)/dmg \
 		-ov -format UDZO $(BUILD_DIRECTORY)/$(APP_NAME).dmg
 	@rm -rf $(BUILD_DIRECTORY)/dmg
 	@echo "DMG created: $(BUILD_DIRECTORY)/$(APP_NAME).dmg"
 
-# Install to /Applications
+# Install to /Applications and CLI to /usr/local/bin
 install: app
 	@echo "Installing to /Applications..."
 	@rm -rf /Applications/$(APP_NAME).app
 	@cp -r $(APP_BUNDLE) /Applications/
+	@echo "Installing CLI tool to /usr/local/bin (requires sudo)..."
+	@sudo mkdir -p /usr/local/bin
+	@sudo cp $(RESOURCES_DIR)/macos/drite-cli /usr/local/bin/drite
+	@sudo chmod +x /usr/local/bin/drite
 	@echo "Refreshing icon cache and Launch Services database..."
 	@touch /Applications/$(APP_NAME).app
 	@/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f /Applications/$(APP_NAME).app
 	@killall Dock 2>/dev/null || true
-	@echo "Installed $(APP_NAME).app to /Applications"
+	@echo ""
+	@echo "✓ Installed $(APP_NAME).app to /Applications"
+	@echo "✓ Installed 'drite' command to /usr/local/bin"
+	@echo ""
+	@echo "You can now run 'drite' from the command line!"
 	@echo "Note: Dock has been restarted to refresh the icon"
 
-# Uninstall from /Applications
+# Uninstall from /Applications and remove CLI
 uninstall:
 	@echo "Uninstalling from /Applications..."
 	@rm -rf /Applications/$(APP_NAME).app
-	@echo "Uninstalled $(APP_NAME).app"
+	@echo "Removing CLI tool from /usr/local/bin (requires sudo)..."
+	@sudo rm -f /usr/local/bin/drite
+	@echo ""
+	@echo "✓ Uninstalled $(APP_NAME).app"
+	@echo "✓ Removed 'drite' command"
 endif
 
 # Linux: Create package structure

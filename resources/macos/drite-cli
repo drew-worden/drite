@@ -1,0 +1,23 @@
+#!/bin/bash
+# Drite CLI wrapper
+# This script launches Drite from the command line
+
+set -e
+
+APP_PATH="/Applications/Drite.app"
+EXECUTABLE="$APP_PATH/Contents/MacOS/drite"
+
+# Check if Drite is installed
+if [ ! -d "$APP_PATH" ]; then
+    echo "Error: Drite is not installed in /Applications"
+    echo "Please install Drite.app to /Applications first"
+    exit 1
+fi
+
+if [ ! -x "$EXECUTABLE" ]; then
+    echo "Error: Drite executable not found at $EXECUTABLE"
+    exit 1
+fi
+
+# Launch Drite with all arguments passed to this script
+exec "$EXECUTABLE" "$@"

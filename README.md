@@ -191,6 +191,60 @@ make info
 make help
 ```
 
+## Command Line Usage
+
+Drite includes a CLI tool for launching from the terminal.
+
+### Installation
+
+**From Source:**
+```bash
+# Install both the app and CLI tool
+make install
+```
+
+**From DMG (GitHub Releases):**
+1. Open the DMG file
+2. Drag `Drite.app` to the `Applications` folder
+3. Double-click `Install CLI Tool.command` to install the CLI
+
+This installs:
+- `Drite.app` to `/Applications/`
+- `drite` command to `/usr/local/bin/`
+
+### Usage
+
+```bash
+# Launch Drite
+drite
+
+# Open a specific file (future)
+drite /path/to/file.txt
+
+# Open multiple files (future)
+drite file1.cpp file2.h
+
+# Open a directory (future)
+drite /path/to/project
+```
+
+### Uninstallation
+
+```bash
+# Remove both the app and CLI tool
+make uninstall
+```
+
+### Manual CLI Installation
+
+If you only want the CLI tool:
+
+```bash
+# Copy the CLI script
+sudo cp resources/macos/drite-cli /usr/local/bin/drite
+sudo chmod +x /usr/local/bin/drite
+```
+
 ### macOS-Specific Targets
 
 ```bash
