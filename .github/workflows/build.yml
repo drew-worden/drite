@@ -1,0 +1,72 @@
+name: Build and Package
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  APP_NAME: Drite
+  BUILD_TYPE: Release
+
+jobs:
+  build-macos:
+    name: Build macOS App
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+
+    - name: Check environment
+      run: |
+        echo "macOS version: $(sw_vers -productVersion)"
+        echo "Xcode version: $(xcodebuild -version)"
+        clang++ --version
+        make info
+
+    - name: Build executable
+      run: make
+
+    - name: Generate icon
+      run: make icon
+
+    - name: Create app bundle
+      run: make app
+
+    - name: Verify app bundle
+      run: |
+        ls -la build/
+        ls -la build/${{ env.APP_NAME }}.app/Contents/
+        ls -la build/${{ env.APP_NAME }}.app/Contents/Resources/
+
+    - name: Create DMG
+      run: make dmg
+
+    - name: Get short SHA
+      id: slug
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+    - name: Rename DMG with commit SHA
+      run: |
+        mv build/${{ env.APP_NAME }}.dmg build/${{ env.APP_NAME }}-${{ steps.slug.outputs.sha_short }}.dmg
+
+    - name: Upload DMG artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.APP_NAME }}-macOS-${{ steps.slug.outputs.sha_short }}
+        path: build/${{ env.APP_NAME }}-${{ steps.slug.outputs.sha_short }}.dmg
+        retention-days: 30
+
+    - name: Upload app bundle artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.APP_NAME }}-app-bundle-${{ steps.slug.outputs.sha_short }}
+        path: build/${{ env.APP_NAME }}.app
+        retention-days: 30
