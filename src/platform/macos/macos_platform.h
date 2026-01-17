@@ -8,8 +8,10 @@
  */
 #ifdef __OBJC__
 @class NSAutoreleasePool;
+@class MacOSAppDelegate;
 #else
 typedef struct objc_object NSAutoreleasePool;
+typedef struct objc_object MacOSAppDelegate;
 #endif
 
 namespace drite {
@@ -80,6 +82,11 @@ namespace drite {
              * @brief The macOS autorelease pool used for memory management.
              */
             NSAutoreleasePool* m_autoreleasePool{nullptr};
+
+            /**
+             * @brief The application delegate for handling app-level events.
+             */
+            MacOSAppDelegate* m_appDelegate{nullptr};
 
             /**
              * @brief The time point when the platform was initialized.

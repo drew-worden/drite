@@ -3,6 +3,34 @@
 #import <Cocoa/Cocoa.h>
 #import <thread>
 
+/* 
+ * @brief Application delegate to handle app-level events like Command+Q
+ */
+@interface MacOSAppDelegate : NSObject<NSApplicationDelegate>
+@end
+    
+/* 
+ * @brief Application delegate to handle app-level events like Command+Q
+ */
+@implementation MacOSAppDelegate
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication*)sender {
+    // Post a window close event to all windows instead of terminating directly
+    for (NSWindow* window in [NSApp windows]) {
+        [window performClose:nil];
+    }
+    return NSTerminateCancel;
+}
+
+/**
+ * @brief Determine if the application should terminate after the last window is closed.
+ * @param sender The NSApplication instance.
+ * @return True if the application should terminate, false otherwise.
+ */
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication*)sender {
+    return YES;
+}
+@end
+
 namespace drite {
     /**
      * @brief Construct a new MacOSPlatform object.
@@ -15,6 +43,9 @@ namespace drite {
     MacOSPlatform::~MacOSPlatform() {
         if (m_initialized) {
             shutdown();
+        }
+        if (m_appDelegate) {
+            [m_appDelegate release];
         }
     }
 
@@ -31,8 +62,34 @@ namespace drite {
             // Initialize NSApplication
             [NSApplication sharedApplication];
 
+            // Create and set application delegate to handle Command+Q
+            m_appDelegate = [[MacOSAppDelegate alloc] init];
+            [NSApp setDelegate:m_appDelegate];
+
             // Set activation policy to regular app (appears in Dock)
             [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+
+            // Create menu bar for Command+Q to work
+            NSMenu* mainMenu = [[NSMenu alloc] init];
+
+            // App menu
+            NSMenuItem* appMenuItem = [[NSMenuItem alloc] init];
+            NSMenu* appMenu = [[NSMenu alloc] init];
+
+            // Quit menu item (Command+Q)
+            NSMenuItem* quitMenuItem = [[NSMenuItem alloc] initWithTitle:@"Quit Drite"
+                                                                  action:@selector(terminate:)
+                                                           keyEquivalent:@"q"];
+            [appMenu addItem:quitMenuItem];
+            [appMenuItem setSubmenu:appMenu];
+            [mainMenu addItem:appMenuItem];
+
+            [NSApp setMainMenu:mainMenu];
+
+            [quitMenuItem release];
+            [appMenu release];
+            [appMenuItem release];
+            [mainMenu release];
 
             // Finish launching
             [NSApp finishLaunching];
