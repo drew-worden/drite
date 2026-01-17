@@ -80,7 +80,55 @@ jobs:
           #### macOS
           1. Download the `.dmg` file
           2. Open the DMG and drag ${{ env.APP_NAME }}.app to Applications
-          3. Launch ${{ env.APP_NAME }} from Applications or Spotlight
+          3. (Optional) Double-click `Install CLI Tool.command` to install the `drite` command for terminal use
+          4. Launch ${{ env.APP_NAME }} from Applications or Spotlight
+
+          ### Important: Unsigned Application Warning
+
+          This application is not code-signed or notarized. macOS Gatekeeper will show security warnings when you try to run it.
+
+          #### First Launch - "Cannot Be Opened" Warning
+
+          When you first try to open ${{ env.APP_NAME }}.app, you may see:
+          > "${{ env.APP_NAME }}.app cannot be opened because it is from an unidentified developer."
+
+          **Solution 1: Right-Click Method**
+          1. Right-click (or Control-click) on ${{ env.APP_NAME }}.app in Applications
+          2. Select "Open" from the context menu
+          3. Click "Open" in the security dialog
+          4. The app will now run and be remembered as safe
+
+          **Solution 2: System Settings**
+          1. Try to open the app normally (it will be blocked)
+          2. Go to **System Settings → Privacy & Security**
+          3. Scroll down to the "Security" section
+          4. Click **"Open Anyway"** next to the message about ${{ env.APP_NAME }}
+          5. Confirm by clicking "Open" in the dialog
+
+          **Solution 3: Command Line (Advanced)**
+          ```bash
+          # Remove quarantine attribute from the app
+          xattr -cr /Applications/${{ env.APP_NAME }}.app
+          ```
+
+          #### CLI Tool Installation Warnings
+
+          If you double-click `Install CLI Tool.command` from the DMG, you may see:
+          > "Install CLI Tool.command cannot be opened because it is from an unidentified developer."
+
+          **Solution:**
+          1. Right-click on `Install CLI Tool.command` and select "Open"
+          2. Click "Open" in the security dialog
+          3. The installer will run in Terminal and prompt for your password
+
+          **Alternative: Manual CLI Installation**
+          ```bash
+          # Copy the CLI tool manually
+          sudo cp /Applications/${{ env.APP_NAME }}.app/Contents/Resources/bin/drite /usr/local/bin/drite
+          sudo chmod +x /usr/local/bin/drite
+          ```
+
+          After installation, you can run `drite` from any terminal.
 
           ### Requirements
 
